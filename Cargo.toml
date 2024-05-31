@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 candle-core = "0.5.1"
+candle-nn = "0.5.1"
 rand = "0.8.5"

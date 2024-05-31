@@ -77,6 +77,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "candle-nn"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1efb293365959fc5feacbd93fa918980df2d9f2fb89853af02e33a830c10b49b"
+dependencies = [
+ "candle-core",
+ "half",
+ "num-traits",
+ "rayon",
+ "safetensors",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -127,6 +142,7 @@ name = "d2l"
 version = "0.1.0"
 dependencies = [
  "candle-core",
+ "candle-nn",
  "rand",
 ]
 
