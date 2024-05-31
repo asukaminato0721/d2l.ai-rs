@@ -47,7 +47,7 @@ mod test {
             torch::cat(&[&X, &Y], 1)?
         );
         println!("{}", X.eq(&Y)?);
-        println!("{}", X.sum((0, 1))?);
+        println!("{}", X.sum_all()?);
 
         // 2.1.4
         let a = torch::arange(0i64, 3i64, device)?.reshape((3, 1))?;
