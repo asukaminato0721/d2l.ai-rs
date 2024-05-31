@@ -1,17 +1,29 @@
 use candle_core::{DType, Device, IndexOp, Tensor as torch, Var};
 use candle_core::{Tensor, D};
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 struct SyntheticRegressionData {
     X: Tensor,
     y: Tensor,
+    num_train: usize,
+    batch_size: usize,
+    num_val: usize,
 }
 
 impl SyntheticRegressionData {
-    fn new(w: Tensor, b: f64, noise: f64, num_train: i32, num_val: i32, batch_size: i32) -> Self {
+    fn new(
+        w: Tensor,
+        b: f64,
+        noise: f64,
+        num_train: usize,
+        num_val: usize,
+        batch_size: usize,
+    ) -> Self {
         let device = &Device::Cpu;
         let n = num_train + num_val;
         let lenw = w.shape().dims1().unwrap();
-        let X = torch::randn(0., 1., (n as usize, lenw), device).unwrap();
-        let noise = torch::rand(0., 1., (n as usize, 1), device).unwrap();
+        let X = torch::rand(0., 1., (n as usize, lenw), device).unwrap();
+        let noise = torch::rand(0., noise, (n as usize, 1), device).unwrap();
         let y = X
             .matmul(&w.reshape(((), 1)).unwrap())
             .unwrap()
@@ -19,7 +31,13 @@ impl SyntheticRegressionData {
             .unwrap()
             .broadcast_add(&noise)
             .unwrap();
-        Self { X, y }
+        Self {
+            X,
+            y,
+            num_train,
+            batch_size,
+            num_val,
+        }
     }
 }
 
