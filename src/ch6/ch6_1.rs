@@ -22,7 +22,7 @@ mod test {
     fn ch6_1_134() -> Result<(), Box<dyn std::error::Error>> {
         let device = &Device::Cpu;
         let varmap = VarMap::new();
-        let vb = VarBuilder::from_varmap(&varmap, DType::F64, &Device::Cpu);
+        let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
         struct MLP {
             hidden: Linear,
@@ -30,8 +30,9 @@ mod test {
         }
         impl MLP {
             fn new() -> Result<Self, Box<dyn std::error::Error>> {
+                let device = &Device::Cpu;
                 let varmap = VarMap::new();
-                let vb = VarBuilder::from_varmap(&varmap, DType::F64, &Device::Cpu);
+                let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
                 Ok(Self {
                     hidden: linear(20, 256, vb.pp("fc1"))?,
@@ -55,7 +56,7 @@ mod test {
             fn new() -> Result<Self, Box<dyn std::error::Error>> {
                 let device = &Device::Cpu;
                 let varmap = VarMap::new();
-                let vb = VarBuilder::from_varmap(&varmap, DType::F64, &Device::Cpu);
+                let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
                 // Random weight parameters that will not compute gradients and
                 // therefore keep constant during training
@@ -88,8 +89,9 @@ mod test {
         }
         impl NestMLP {
             fn new() -> Result<Self, Box<dyn std::error::Error>> {
+                let device = &Device::Cpu;
                 let varmap = VarMap::new();
-                let vb = VarBuilder::from_varmap(&varmap, DType::F64, &Device::Cpu);
+                let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
                 Ok(Self {
                     net: seq()
