@@ -26,8 +26,8 @@ mod test {
         let X = torch::arange(0i64, 24i64, device)?.reshape((2, 3, 4))?;
         println!(
             "{} {:?}",
-            X.broadcast_add(&a)?,
-            X.broadcast_mul(&a)?.shape()
+            X.affine(0f64, 2f64)?,
+            X.affine(2f64, 0f64)?.shape()
         );
         println!("{:?}\n{}", A.shape(), A.sum_all()?);
         println!("{:?}\n{:?}", A.shape(), A.sum(0)?.shape());
