@@ -22,8 +22,8 @@ impl SyntheticRegressionData {
         let device = &Device::Cpu;
         let n = num_train + num_val;
         let lenw = w.shape().dims1().unwrap();
-        let X = torch::rand(0., 1., (n as usize, lenw), device).unwrap();
-        let noise = torch::rand(0., noise, (n as usize, 1), device).unwrap();
+        let X = torch::rand(0., 1., (n, lenw), device).unwrap();
+        let noise = torch::rand(0., noise, (n, 1), device).unwrap();
         let y = X
             .matmul(&w.reshape(((), 1)).unwrap())
             .unwrap()

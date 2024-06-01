@@ -3,4 +3,5 @@
 mod ch2;
 mod ch3;
 mod ch6;
+mod ch7;
 mod examples;
