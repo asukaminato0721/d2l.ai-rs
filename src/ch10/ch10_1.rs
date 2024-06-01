@@ -127,7 +127,7 @@ mod test {
         let varmap = VarMap::new();
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
-        let lstm = nn::lstm(114514, 1919810, Default::default(), vb.pp("lstm"))?;
+        let lstm = nn::lstm(11, 111, Default::default(), vb.pp("lstm"))?;
         Ok(())
     }
 }

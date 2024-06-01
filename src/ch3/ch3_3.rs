@@ -1,7 +1,5 @@
 use candle_core::{DType, Device, IndexOp, Tensor as torch, Var};
 use candle_core::{Tensor, D};
-use rand::seq::SliceRandom;
-use rand::thread_rng;
 struct SyntheticRegressionData {
     X: Tensor,
     y: Tensor,
