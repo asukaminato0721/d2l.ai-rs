@@ -1,10 +1,13 @@
 #[cfg(test)]
 mod test {
-    use candle_core::{DType, Device, IndexOp, Shape, Tensor, Tensor as torch, Var};
+    use candle_core::{DType, Device, IndexOp, Shape, Tensor as torch, Tensor, Var, D};
     use candle_nn::{
-        self as nn, conv2d, conv2d_no_bias, linear, ops::sigmoid, seq, Activation, Conv2dConfig,
-        Linear, Module, Sequential, VarBuilder, VarMap,
+        self as nn, conv2d, conv2d_no_bias, linear, loss,
+        ops::{self, sigmoid},
+        seq, Activation, Conv2dConfig, Linear, Module, Optimizer, Sequential, VarBuilder, VarMap,
+        RNN, SGD,
     };
+    use rand::{seq::SliceRandom, thread_rng};
 
     #[test]
     fn ch_10_1_2_1() {
@@ -124,6 +127,7 @@ mod test {
     #[test]
     fn ch_10_1_3() -> Result<(), Box<dyn std::error::Error>> {
         let device = &Device::Cpu;
+        let dev = &Device::Cpu;
         let varmap = VarMap::new();
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 

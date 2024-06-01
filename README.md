@@ -5,7 +5,7 @@ to help myself get familiar with basic ideas.
 
 
 ```sh
-cargo test -- --nocapture
+cargo test -r -- --nocapture
 ```
 
 ## TODO
