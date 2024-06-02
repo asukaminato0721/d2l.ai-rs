@@ -1,18 +1,41 @@
 #[cfg(test)]
 mod test {
-    use std::time;
+    use std::time::{self, SystemTime};
 
     use candle_core::{DType, Device, IndexOp, Tensor as torch, Tensor, Var};
     #[test]
     fn get_start() -> Result<(), Box<dyn std::error::Error>> {
         let device = &Device::Cpu;
         let n = 10000;
-        let a = torch::ones(10000, DType::F32, device)?;
-        let b = torch::ones(10000, DType::F32, device)?;
-        let c = torch::zeros(10000, DType::F32, device)?;
+        let a = torch::ones(n, DType::F32, device)?;
+        let b = torch::ones(n, DType::F32, device)?;
+        let mut c = vec![Default::default(); n];
+        let t = time::SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)?
+            .as_millis();
+        for i in 0..n {
+            c[i] = a.i(i)?.add(&b.i(i)?)?.to_scalar::<f32>()?;
+        }
 
-        // nothing to do here
-
+        println!(
+            "{}",
+            SystemTime::now()
+                .duration_since(SystemTime::UNIX_EPOCH)?
+                .as_millis()
+                - t
+        );
+        let t = SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)?
+            .as_millis();
+        a.add(&b)?;
+        println!(
+            "{}",
+            SystemTime::now()
+                .duration_since(SystemTime::UNIX_EPOCH)?
+                .as_millis()
+                - t
+        );
         Ok(())
     }
 }
+// cargo test -r --package d2l --lib -- ch3::ch3_1::test::get_start --exact --show-output
