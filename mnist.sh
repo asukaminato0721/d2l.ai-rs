@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eux
 rm -rvf data
 mkdir -vp data
 pushd ./data

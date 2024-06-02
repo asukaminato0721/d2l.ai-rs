@@ -1,11 +1,13 @@
 #[cfg(test)]
 mod test {
+    use std::collections::HashMap;
+
     use candle_core::{DType, Device, IndexOp, Shape, Tensor as torch, Tensor, Var, D};
     use candle_nn::{
         self as nn, conv2d, conv2d_no_bias, linear, loss,
         ops::{self, sigmoid},
-        seq, Activation, Conv2dConfig, Linear, Module, Optimizer, Sequential, VarBuilder, VarMap,
-        RNN, SGD,
+        seq, Activation, Conv2dConfig, LSTMConfig, Linear, Module, Optimizer, Sequential,
+        VarBuilder, VarMap, RNN, SGD,
     };
     use rand::{seq::SliceRandom, thread_rng};
 
@@ -131,7 +133,20 @@ mod test {
         let varmap = VarMap::new();
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
-        let lstm = nn::lstm(11, 111, Default::default(), vb.pp("lstm"))?;
+        use crate::utils::TimeMachine;
+        /// data = d2l.TimeMachine(batch_size=1024, num_steps=32)
+        let data = TimeMachine::new(1024, 32, 10000, 5000)?;
+        /// lstm = LSTM(num_inputs=len(data.vocab), num_hiddens=32)
+        let lstm = nn::lstm(
+            data.vocab.len(),
+            32,
+            LSTMConfig {
+                ..Default::default()
+            },
+            vb.pp("lstm"),
+        )?;
+        let mut states = vec![lstm.zero_state(1024)?];
+        // TODO train LSTM
         Ok(())
     }
 }
