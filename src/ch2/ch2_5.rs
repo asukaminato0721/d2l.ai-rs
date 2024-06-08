@@ -4,18 +4,19 @@ mod test {
     #[test]
     fn get_start() -> Result<()> {
         let device = &Device::cuda_if_available(0)?;
+        /// 2.5.1
         let x = Var::new(&[0., 1., 2., 3.], device)?;
         let x = x.as_tensor();
         assert_eq!(x.to_vec1::<f64>()?, [0., 1., 2., 3.]);
         let y = x.powf(2.)?.sum_all()?.affine(2., 0.)?;
         assert_eq!(y.to_vec0::<f64>()?, 28.);
         assert_eq!(
-            y.backward()?.get(&x).unwrap().to_vec1::<f64>()?,
+            y.backward()?.get(x).unwrap().to_vec1::<f64>()?,
             [0., 4., 8., 12.]
         );
         assert_eq!(
             y.backward()?
-                .get(&x)
+                .get(x)
                 .unwrap()
                 .eq(&x.affine(4., 0.)?)?
                 .to_vec1::<u8>()?,
@@ -24,14 +25,38 @@ mod test {
 
         let y = x.sum_all()?;
         assert_eq!(
-            y.backward()?.get(&x).unwrap().to_vec1::<f64>()?,
+            y.backward()?.get(x).unwrap().to_vec1::<f64>()?,
             [1., 1., 1., 1.]
         );
+        /// 2.5.2
         let y = x.powf(2.)?;
         assert_eq!(
-            y.backward()?.get(&x).unwrap().to_vec1::<f64>()?,
+            y.backward()?.get(x).unwrap().to_vec1::<f64>()?,
             [0., 2., 4., 6.]
         );
+        /// 2.5.3
+        let y = x.mul(&x)?;
+        let u = y.detach();
+        let z = u.mul(&x)?;
+        assert_eq!(
+            z.sum_all()?
+                .backward()?
+                .get(x)
+                .unwrap()
+                .eq(&u)?
+                .to_vec1::<u8>()?,
+            [1, 1, 1, 1]
+        );
+        assert_eq!(
+            y.sum_all()?
+                .backward()?
+                .get(x)
+                .unwrap()
+                .eq(&x.affine(2., 0.)?)?
+                .to_vec1::<u8>()?,
+            [1, 1, 1, 1]
+        );
+        /// 2.5.4
         fn f(a: &Tensor) -> Result<Tensor> {
             let mut b = a.affine(2f64, 0f64).unwrap();
             while b.powf(2.)?.sum_all()?.sqrt()?.to_vec0::<f64>()? < 1000. {
@@ -46,13 +71,13 @@ mod test {
         let a = Var::new(&[1f64], device)?;
         let a = a.as_tensor();
         assert_eq!(
-            f(a)?.backward()?.get(&a).unwrap().to_vec1::<f64>()?,
+            f(a)?.backward()?.get(a).unwrap().to_vec1::<f64>()?,
             [1024.]
         );
         assert_eq!(
             f(a)?
                 .backward()?
-                .get(&a)
+                .get(a)
                 .unwrap()
                 .eq(&f(a)?.div(&a)?)?
                 .to_vec1::<u8>()?,
