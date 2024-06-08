@@ -9,6 +9,7 @@ mod test {
             x.to_vec1::<f32>()?,
             [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.]
         );
+        assert_eq!(x.elem_count(), 12);
         assert_eq!(x.dims(), [12]);
         let X = x.reshape((3, 4))?;
         assert_eq!(
@@ -46,6 +47,22 @@ mod test {
         );
         // https://github.com/huggingface/candle/issues/1163
         // Tensor can not mut, so ignore
+        /// X[:2, :] = 12
+        assert_eq!(
+            torch::cat(
+                &[
+                    X.i(..2)?.affine(0., 12.)?.to_dtype(DType::F64)?,
+                    X.i(2)?.unsqueeze(0)?.to_dtype(DType::F64)?
+                ],
+                0
+            )?
+            .to_vec2::<f64>()?,
+            [
+                [12., 12., 12., 12.],
+                [12., 12., 12., 12.],
+                [8., 9., 10., 11.]
+            ]
+        );
         assert_eq!(
             x.exp()?.to_vec1::<f32>()?,
             [

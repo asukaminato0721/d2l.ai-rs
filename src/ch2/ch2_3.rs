@@ -4,12 +4,12 @@ mod test {
     #[test]
     fn get_start() -> Result<()> {
         let device = &Device::cuda_if_available(0)?;
-        let x = torch::new(&[3.], device)?;
-        let y = torch::new(&[2.], device)?;
-        assert_eq!(x.add(&y)?.to_vec1::<f64>()?, [5.],);
-        assert_eq!(x.mul(&y)?.to_vec1::<f64>()?, [6.]);
-        assert_eq!(x.div(&y)?.to_vec1::<f64>()?, [1.5]);
-        assert_eq!(x.pow(&y)?.round()?.to_vec1::<f64>()?, [9.]);
+        let x = torch::new(3., device)?;
+        let y = torch::new(2., device)?;
+        assert_eq!(x.add(&y)?.to_scalar::<f64>()?, 5.,);
+        assert_eq!(x.mul(&y)?.to_scalar::<f64>()?, 6.);
+        assert_eq!(x.div(&y)?.to_scalar::<f64>()?, 1.5);
+        assert_eq!(x.pow(&y)?.round()?.to_scalar::<f64>()?, 9.);
         let x = torch::arange(0i64, 3i64, device)?;
         assert_eq!(x.i(2)?.to_scalar::<i64>()?, 2);
         assert_eq!(x.elem_count(), 3);
