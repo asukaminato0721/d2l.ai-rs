@@ -1,25 +1,20 @@
 #[cfg(test)]
 mod test {
-    use std::{borrow::BorrowMut, vec};
-
-    use candle_core::{DType, Device, IndexOp, Tensor as torch, Tensor, Var};
+    use candle_core::{DType, Device, IndexOp, Result, Tensor as torch, Tensor, Var};
     use candle_nn::{
         self as nn, linear, seq, Activation, Conv2dConfig, Linear, Module, Sequential, VarBuilder,
         VarMap,
     };
 
     #[test]
-    fn ch7_2_3() -> Result<(), Box<dyn std::error::Error>> {
-        let device = &Device::Cpu;
+    fn ch7_2_3() -> Result<()> {
+        let device = &Device::cuda_if_available(0)?;
         let varmap = VarMap::new();
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
-
-        let device = &Device::Cpu;
-
         let X = torch::new(&[[0.0, 1.0, 2.0], [3.0, 4.0, 5.0], [6.0, 7.0, 8.0]], device)?;
         let K = torch::new(&[[0., 1.], [2., 3.]], device)?;
-        fn corr2d(X: &Tensor, K: &Tensor) -> candle_core::Result<Tensor> {
-            let device = &Device::Cpu;
+        fn corr2d(X: &Tensor, K: &Tensor) -> Result<Tensor> {
+            let device = &Device::cuda_if_available(0)?;
             let (h, w) = (K.dim(0)?, K.dim(1)?);
 
             let mut Y = vec![vec![Default::default(); X.dim(1)? - w + 1]; X.dim(0)? - h + 1];
@@ -34,7 +29,7 @@ mod test {
             }
             Ok(torch::new(Y, device)?)
         }
-        println!("corr2d(X, K) {}", corr2d(&X, &K)?);
+        assert_eq!(corr2d(&X, &K)?.to_vec2::<f64>()?, [[19., 25.], [37., 43.]]);
 
         {
             struct Conv2D {
@@ -42,7 +37,7 @@ mod test {
                 bias: Tensor,
             }
             impl Module for Conv2D {
-                fn forward(&self, xs: &Tensor) -> candle_core::Result<Tensor> {
+                fn forward(&self, xs: &Tensor) -> Result<Tensor> {
                     Ok(corr2d(xs, &self.weight)?.add(&self.bias)?)
                 }
             }
@@ -57,14 +52,46 @@ mod test {
                 ],
                 1,
             )?;
-            println!("{X}");
+            assert_eq!(
+                X.to_vec2::<f64>()?,
+                [
+                    [1., 1., 0., 0., 0., 0., 1., 1.],
+                    [1., 1., 0., 0., 0., 0., 1., 1.],
+                    [1., 1., 0., 0., 0., 0., 1., 1.],
+                    [1., 1., 0., 0., 0., 0., 1., 1.],
+                    [1., 1., 0., 0., 0., 0., 1., 1.],
+                    [1., 1., 0., 0., 0., 0., 1., 1.]
+                ]
+            );
 
             let K = torch::new(&[[1.0, -1.0]], device)?;
 
             let Y = corr2d(&X, &K)?;
 
-            println!("{}", Y);
-            println!("{}", corr2d(&X.t()?, &K)?);
+            assert_eq!(
+                Y.to_vec2::<f64>()?,
+                [
+                    [0., 1., 0., 0., 0., -1., 0.],
+                    [0., 1., 0., 0., 0., -1., 0.],
+                    [0., 1., 0., 0., 0., -1., 0.],
+                    [0., 1., 0., 0., 0., -1., 0.],
+                    [0., 1., 0., 0., 0., -1., 0.],
+                    [0., 1., 0., 0., 0., -1., 0.]
+                ]
+            );
+            assert_eq!(
+                corr2d(&X.t()?, &K)?.to_vec2::<f64>()?,
+                [
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.],
+                    [0., 0., 0., 0., 0.]
+                ]
+            );
             // TODO d2l said that conv2d = nn.LazyConv2d(1, kernel_size=(1, 2), bias=False) , but candle only support usize, so skip
             // but Op has a https://docs.rs/candle-core/0.5.1/candle_core/op/enum.Op.html#variant.Conv2D
             let conv2d = nn::conv2d(1, 1, 2, Default::default(), vb.pp("conv1"))?;

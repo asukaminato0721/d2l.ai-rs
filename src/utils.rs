@@ -186,12 +186,34 @@ mod test {
         let tm = TimeMachine::new(32, 35, 10000, 5000)?;
         let (train_X, train_Y) = tm.get_dataloader(true);
         let (val_X, val_Y) = tm.get_dataloader(false);
-
-        // Print some data to verify
-        println!("Train X: {:?}", &train_X[0..1]);
-        println!("Train Y: {:?}", &train_Y[0..1]);
-        println!("Validation X: {:?}", &val_X[0..1]);
-        println!("Validation Y: {:?}", &val_Y[0..1]);
+        assert_eq!(
+            train_X[0],
+            [
+                0, 1, 2, 3, 0, 4, 5, 2, 3, 5, 6, 7, 1, 4, 8, 2, 3, 3, 9, 10, 3, 1, 3, 3, 11, 3, 3,
+                12, 2, 13, 13, 14, 3, 3, 3
+            ]
+        );
+        assert_eq!(
+            train_Y[0],
+            [
+                1, 2, 3, 0, 4, 5, 2, 3, 5, 6, 7, 1, 4, 8, 2, 3, 3, 9, 10, 3, 1, 3, 3, 11, 3, 3, 12,
+                2, 13, 13, 14, 3, 3, 3, 3
+            ]
+        );
+        assert_eq!(
+            val_X[0],
+            [
+                12, 6, 14, 3, 4, 16, 18, 15, 10, 3, 4, 8, 3, 4, 0, 3, 3, 6, 8, 23, 3, 14, 18, 5, 2,
+                3, 0, 15, 6, 8, 14, 19, 6, 15, 2
+            ]
+        );
+        assert_eq!(
+            val_Y[0],
+            [
+                6, 14, 3, 4, 16, 18, 15, 10, 3, 4, 8, 3, 4, 0, 3, 3, 6, 8, 23, 3, 14, 18, 5, 2, 3,
+                0, 15, 6, 8, 14, 19, 6, 15, 2, 8
+            ]
+        );
 
         Ok(())
     }

@@ -6,13 +6,12 @@ mod test {
     };
     #[test]
     fn ch6_5_1() -> Result<(), Box<dyn std::error::Error>> {
-        let device = &Device::Cpu;
+        let device = &Device::cuda_if_available(0)?;
         let varmap = VarMap::new();
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
         let X = torch::rand(0., 1., (2, 20), device)?;
 
-        // fn ch6_1_3() -> Result<(), Box<dyn std::error::Error>> {
         struct CenteredLayer {}
 
         impl Module for CenteredLayer {
@@ -21,8 +20,11 @@ mod test {
             }
         }
         let net = CenteredLayer {};
-        println!("{}", net.forward(&Tensor::arange(1., 6., device)?)?);
-
+        assert_eq!(
+            net.forward(&Tensor::arange(1., 6., device)?)?
+                .to_vec1::<f64>()?,
+            [-2., -1., 0., 1., 2.]
+        );
         let net = nn::seq()
             .add(linear(8, 128, vb.pp("fc1"))?)
             .add(CenteredLayer {});
@@ -35,10 +37,7 @@ mod test {
         }
         impl MyLinear {
             fn new(in_units: usize, units: usize) -> Result<Self, Box<dyn std::error::Error>> {
-                let device = &Device::Cpu;
-                let varmap = VarMap::new();
-                let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
-
+                let device = &Device::cuda_if_available(0)?;
                 Ok(Self {
                     weight: torch::rand(0., 1., (in_units, units), device)?,
                     bias: torch::rand(0., 1., (units,), device)?,

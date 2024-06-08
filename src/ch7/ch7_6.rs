@@ -49,10 +49,10 @@ mod test {
 
         // mostly copy from https://github.com/huggingface/candle/blob/main/candle-examples/examples/mnist-training/main.rs
         let BSIZE = 64;
-        let dev = &Device::Cpu;
+        let dev = &Device::cuda_if_available(0)?;
         let varmap = VarMap::new();
-        let vs = VarBuilder::from_varmap(&varmap, DType::F32, &dev);
-        let model = LeNet::new(11, vs)?;
+        let vb = VarBuilder::from_varmap(&varmap, DType::F32, &dev);
+        let model = LeNet::new(11, vb)?;
         let m = candle_datasets::vision::mnist::load_dir("data")?;
         let train_labels = m.train_labels;
         let train_images = m.train_images.to_device(dev)?;
