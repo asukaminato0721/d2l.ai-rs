@@ -14,7 +14,7 @@ mod test {
             .duration_since(SystemTime::UNIX_EPOCH)?
             .as_millis();
         for i in 0..n {
-            c[i] = a.i(i)?.add(&b.i(i)?)?.to_scalar::<f32>()?;
+            c[i] = a.i(i)?.add(&b.i(i)?)?.to_vec0::<f32>()?;
         }
 
         println!(

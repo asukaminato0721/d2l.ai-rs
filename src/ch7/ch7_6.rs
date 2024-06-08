@@ -86,7 +86,7 @@ mod test {
                 .eq(&test_labels)?
                 .to_dtype(DType::F32)?
                 .sum_all()?
-                .to_scalar::<f32>()?;
+                .to_vec0::<f32>()?;
             let test_accuracy = sum_ok / test_labels.dims1()? as f32;
             println!(
                 "{epoch:4} train loss {:8.5} test acc: {:5.2}%",

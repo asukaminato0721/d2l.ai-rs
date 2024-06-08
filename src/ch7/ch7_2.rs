@@ -24,7 +24,7 @@ mod test {
                         .i((i..(i + h), j..(j + w)))?
                         .mul(K)?
                         .sum_all()?
-                        .to_scalar::<f64>()?
+                        .to_vec0::<f64>()?
                 }
             }
             Ok(torch::new(Y, device)?)

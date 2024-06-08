@@ -8,7 +8,7 @@ mod test {
         let x = x.as_tensor();
         assert_eq!(x.to_vec1::<f64>()?, [0., 1., 2., 3.]);
         let y = x.powf(2.)?.sum_all()?.affine(2., 0.)?;
-        assert_eq!(y.get(0)?.to_scalar::<f64>()?, 28.);
+        assert_eq!(y.to_vec0::<f64>()?, 28.);
         assert_eq!(
             y.backward()?.get(&x).unwrap().to_vec1::<f64>()?,
             [0., 4., 8., 12.]
@@ -34,10 +34,10 @@ mod test {
         );
         fn f(a: &Tensor) -> Result<Tensor> {
             let mut b = a.affine(2f64, 0f64).unwrap();
-            while b.powf(2.)?.sum_all()?.sqrt()?.to_scalar::<f64>()? < 1000. {
+            while b.powf(2.)?.sum_all()?.sqrt()?.to_vec0::<f64>()? < 1000. {
                 b = b.affine(2., 0.)?;
             }
-            return if b.sum_all()?.to_scalar::<f64>()? > 0. {
+            return if b.sum_all()?.to_vec0::<f64>()? > 0. {
                 Ok(b)
             } else {
                 Ok(b.affine(100., 0.)?)

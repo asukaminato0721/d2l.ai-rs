@@ -106,7 +106,7 @@ mod test {
             X.eq(&Y)?.to_vec2::<u8>()?,
             [[0, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0]]
         );
-        assert_eq!(X.sum_all()?.get(0)?.to_scalar::<f64>()?, 66.);
+        assert_eq!(X.sum_all()?.to_vec0::<f64>()?, 66.);
 
         // 2.1.4
         let a = torch::arange(0i64, 3i64, device)?.reshape((3, 1))?;

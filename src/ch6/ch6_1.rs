@@ -73,7 +73,7 @@ mod test {
                 // parameters with two fully connected layers
                 X = self.linear.forward(&X)?;
                 // Control flow
-                while X.abs()?.sum_all()?.to_scalar::<f64>()? > 1. {
+                while X.abs()?.sum_all()?.to_vec0::<f64>()? > 1. {
                     X = X.affine(0.5, 0.)?;
                 }
                 return Ok(X.sum_all()?);
