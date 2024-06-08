@@ -1,26 +1,26 @@
 #[cfg(test)]
 mod test {
-    use candle_core::{DType, Device, IndexOp, Tensor as torch, Tensor, Var};
+    use candle_core::{DType, Device, IndexOp, Result, Tensor as torch, Tensor, Var};
     use candle_nn::{
         self as nn, linear, seq, Activation, Linear, Module, Sequential, VarBuilder, VarMap,
     };
     #[test]
-    fn get_start() -> Result<(), Box<dyn std::error::Error>> {
+    fn get_start() -> Result<()> {
         // copy from https://github.com/huggingface/candle/issues/1065
-        let device = &Device::Cpu;
+        let device = &Device::cuda_if_available(0)?;
         let varmap = VarMap::new();
-        let vb = VarBuilder::from_varmap(&varmap, DType::F64, &Device::Cpu);
+        let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
         let net = nn::seq()
             .add(linear(20, 256, vb.pp("fc1"))?)
             .add(Activation::Relu)
             .add(linear(256, 10, vb.pp("fc2"))?);
         let X = torch::rand(0., 1., (2, 20), device)?;
-        println!("{:?}", net.forward(&X)?.shape());
+        assert_eq!(net.forward(&X)?.dims(), [2, 10]);
         Ok(())
     }
     #[test]
-    fn ch6_1_134() -> Result<(), Box<dyn std::error::Error>> {
-        let device = &Device::Cpu;
+    fn ch6_1_134() -> Result<()> {
+        let device = &Device::cuda_if_available(0)?;
         let varmap = VarMap::new();
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
@@ -29,8 +29,8 @@ mod test {
             out: Linear,
         }
         impl MLP {
-            fn new() -> Result<Self, Box<dyn std::error::Error>> {
-                let device = &Device::Cpu;
+            fn new() -> Result<Self> {
+                let device = &Device::cuda_if_available(0)?;
                 let varmap = VarMap::new();
                 let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
@@ -39,22 +39,21 @@ mod test {
                     out: linear(256, 10, vb.pp("fc2"))?,
                 })
             }
-            fn forward(self, X: &Tensor) -> Result<Tensor, Box<dyn std::error::Error>> {
+            fn forward(self, X: &Tensor) -> Result<Tensor> {
                 Ok(self.out.forward(&self.hidden.forward(X)?.relu()?)?)
             }
         }
         let X = torch::rand(0., 1., (2, 20), device)?;
         let net = MLP::new()?;
-        println!("{:?}", net.forward(&X)?.shape());
-        // fn ch6_1_3() -> Result<(), Box<dyn std::error::Error>> {
+        assert_eq!(net.forward(&X)?.dims(), [2, 10]);
 
         struct FixedHiddenMLP {
             rand_weight: Tensor,
             linear: Linear,
         }
         impl FixedHiddenMLP {
-            fn new() -> Result<Self, Box<dyn std::error::Error>> {
-                let device = &Device::Cpu;
+            fn new() -> Result<Self> {
+                let device = &Device::cuda_if_available(0)?;
                 let varmap = VarMap::new();
                 let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
@@ -67,9 +66,9 @@ mod test {
             }
         }
         impl Module for FixedHiddenMLP {
-            fn forward(&self, X: &Tensor) -> Result<Tensor, candle_core::Error> {
+            fn forward(&self, X: &Tensor) -> Result<Tensor> {
                 let mut X = self.linear.forward(X)?;
-                X = X.matmul(&self.rand_weight)?.affine(0., 1.)?.relu()?;
+                X = X.matmul(&self.rand_weight)?.affine(1., 1.)?.relu()?;
                 // Reuse the fully connected layer. This is equivalent to sharing
                 // parameters with two fully connected layers
                 X = self.linear.forward(&X)?;
@@ -88,8 +87,8 @@ mod test {
             linear: Linear,
         }
         impl NestMLP {
-            fn new() -> Result<Self, Box<dyn std::error::Error>> {
-                let device = &Device::Cpu;
+            fn new() -> Result<Self> {
+                let device = &Device::cuda_if_available(0)?;
                 let varmap = VarMap::new();
                 let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
@@ -104,7 +103,7 @@ mod test {
             }
         }
         impl Module for NestMLP {
-            fn forward(&self, X: &Tensor) -> Result<Tensor, candle_core::Error> {
+            fn forward(&self, X: &Tensor) -> Result<Tensor> {
                 Ok(self.linear.forward(&self.net.forward(X)?)?)
             }
         }

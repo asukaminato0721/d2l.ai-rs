@@ -1,4 +1,4 @@
-use candle_core::{DType, Device, IndexOp, Tensor as torch, Var};
+use candle_core::{DType, Device, IndexOp, Result, Tensor as torch, Var};
 use candle_core::{Tensor, D};
 struct SyntheticRegressionData {
     X: Tensor,
@@ -16,8 +16,8 @@ impl SyntheticRegressionData {
         num_train: usize,
         num_val: usize,
         batch_size: usize,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let device = &Device::Cpu;
+    ) -> Result<Self> {
+        let device = &Device::cuda_if_available(0)?;
         let n = num_train + num_val;
         let lenw = w.dim(0)?;
         let X = torch::rand(0., 1., (n, lenw), device)?;
@@ -38,13 +38,13 @@ impl SyntheticRegressionData {
 
 #[cfg(test)]
 mod test {
-    use candle_core::{Device, IndexOp, Tensor};
+    use candle_core::{Device, IndexOp, Result, Tensor};
 
     use super::SyntheticRegressionData;
 
     #[test]
-    fn f() -> Result<(), Box<dyn std::error::Error>> {
-        let device = &Device::Cpu;
+    fn f() -> Result<()> {
+        let device = &Device::cuda_if_available(0)?;
         let data = SyntheticRegressionData::new(
             Tensor::new(&[2., -3.4], device)?,
             4.2,

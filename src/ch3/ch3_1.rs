@@ -5,7 +5,7 @@ mod test {
     use candle_core::{DType, Device, IndexOp, Tensor as torch, Tensor, Var};
     #[test]
     fn get_start() -> Result<(), Box<dyn std::error::Error>> {
-        let device = &Device::Cpu;
+        let device = &Device::cuda_if_available(0)?;
         let n = 10000;
         let a = torch::ones(n, DType::F32, device)?;
         let b = torch::ones(n, DType::F32, device)?;
