@@ -70,10 +70,7 @@ mod test {
         }
         let a = Var::new(&[1f64], device)?;
         let a = a.as_tensor();
-        assert_eq!(
-            f(a)?.backward()?.get(a).unwrap().to_vec1::<f64>()?,
-            [1024.]
-        );
+        assert_eq!(f(a)?.backward()?.get(a).unwrap().to_vec1::<f64>()?, [1024.]);
         assert_eq!(
             f(a)?
                 .backward()?

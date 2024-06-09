@@ -112,10 +112,7 @@ mod test {
 
         /// 2.3.11
         let u = torch::new(&[3.0, -4.0], device)?;
-        assert_eq!(
-            u.powf(2.)?.sum_all()?.sqrt()?.to_vec0::<f64>()?,
-            5.
-        );
+        assert_eq!(u.powf(2.)?.sum_all()?.sqrt()?.to_vec0::<f64>()?, 5.);
         assert_eq!(u.abs()?.sum_all()?.to_vec0::<f64>()?, 7.);
         assert_eq!(
             torch::ones((4, 9), DType::F64, device)?
