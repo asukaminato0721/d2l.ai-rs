@@ -28,15 +28,15 @@ mod test {
                 num_inputs: usize,
                 num_hiddens: usize,
                 sigma: f64,
-            ) -> Result<Self, Box<dyn std::error::Error>> {
+            ) -> Result<Self, candle_core::Error> {
                 let init_weight =
-                    |shape: (usize, usize)| -> Result<Tensor, Box<dyn std::error::Error>> {
-                        Ok(torch::rand(0., 1., shape, &Device::Cpu)?.affine(sigma, 0.)?)
+                    |shape: (usize, usize)| -> Result<Tensor, candle_core::Error> {
+                        torch::rand(0., 1., shape, &Device::Cpu)? * sigma
                     };
                 let triple = || -> Result<(
-                    Result<Tensor, Box<dyn std::error::Error>>,
-                     Result<Tensor, Box<dyn std::error::Error>>,
-                     Tensor), Box<dyn std::error::Error>> {
+                    Result<Tensor, candle_core::Error>,
+                     Result<Tensor, candle_core::Error>,
+                     Tensor), candle_core::Error> {
                         Ok((
                         init_weight((num_inputs, num_hiddens)),
                         init_weight((num_hiddens, num_hiddens)),

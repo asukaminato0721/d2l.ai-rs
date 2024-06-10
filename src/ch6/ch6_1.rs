@@ -68,15 +68,15 @@ mod test {
         impl Module for FixedHiddenMLP {
             fn forward(&self, X: &Tensor) -> Result<Tensor> {
                 let mut X = self.linear.forward(X)?;
-                X = X.matmul(&self.rand_weight)?.affine(1., 1.)?.relu()?;
+                X = (X.matmul(&self.rand_weight)? + 1.)?.relu()?;
                 // Reuse the fully connected layer. This is equivalent to sharing
                 // parameters with two fully connected layers
                 X = self.linear.forward(&X)?;
                 // Control flow
                 while X.abs()?.sum_all()?.to_vec0::<f64>()? > 1. {
-                    X = X.affine(0.5, 0.)?;
+                    X = (X * 0.5)?;
                 }
-                return Ok(X.sum_all()?);
+                return X.sum_all();
             }
         }
         let net = FixedHiddenMLP::new()?;

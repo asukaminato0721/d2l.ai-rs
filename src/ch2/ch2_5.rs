@@ -18,7 +18,7 @@ mod test {
             y.backward()?
                 .get(x)
                 .unwrap()
-                .eq(&x.affine(4., 0.)?)?
+                .eq(&(x * 4.)?)?
                 .to_vec1::<u8>()?,
             [1, 1, 1, 1]
         );
@@ -58,14 +58,14 @@ mod test {
         );
         /// 2.5.4
         fn f(a: &Tensor) -> Result<Tensor> {
-            let mut b = a.affine(2f64, 0f64).unwrap();
-            while b.powf(2.)?.sum_all()?.sqrt()?.to_vec0::<f64>()? < 1000. {
-                b = b.affine(2., 0.)?;
+            let mut b = (a * 2.)?;
+            while b.sqr()?.sum_all()?.sqrt()?.to_vec0::<f64>()? < 1000. {
+                b = (b * 2.)?;
             }
             return if b.sum_all()?.to_vec0::<f64>()? > 0. {
                 Ok(b)
             } else {
-                Ok(b.affine(100., 0.)?)
+                b * 100.
             };
         }
         let a = Var::new(&[1f64], device)?;

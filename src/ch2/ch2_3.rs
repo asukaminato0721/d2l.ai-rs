@@ -51,7 +51,7 @@ mod test {
                 [[14, 15, 16, 17], [18, 19, 20, 21], [22, 23, 24, 25]]
             ]
         );
-        assert_eq!(X.affine(a, 0.)?.dims(), [2, 3, 4]);
+        assert_eq!((X * a)?.dims(), [2, 3, 4]);
         /// 2.3.6
         let x = torch::arange(0., 3., device)?;
         assert_eq!(x.to_vec1::<f64>()?, [0., 1., 2.]);
@@ -70,9 +70,7 @@ mod test {
 
         assert_eq!(A.mean(0)?.to_vec1::<f64>()?, [1.5, 2.5, 3.5]);
         assert_eq!(
-            A.sum(0)?
-                .affine(1. / (A.dim(0)? as f64), 0.)?
-                .to_vec1::<f64>()?,
+            (A.sum(0)? / (A.dim(0)? as f64))?.to_vec1::<f64>()?,
             [1.5, 2.5, 3.5]
         );
         // 2.3.7
