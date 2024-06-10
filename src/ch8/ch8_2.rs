@@ -7,20 +7,21 @@ mod test {
     };
 
     #[test]
-    fn f() {
+    fn f() -> Result<(), Box<dyn std::error::Error>> {
+        let dev = &Device::cuda_if_available(0)?;
+        let varmap = VarMap::new();
+        let vb = VarBuilder::from_varmap(&varmap, DType::F64, dev);
         struct VGG {
             net: Sequential,
+            lr: f32,
         }
         impl VGG {
             fn new(
                 arch: &[(usize, usize)],
                 lr: f32,
                 num_classes: usize,
+                vb: VarBuilder,
             ) -> Result<Self, Box<dyn std::error::Error>> {
-                let dev = &Device::cuda_if_available(0)?;
-                let varmap = VarMap::new();
-                let vb = VarBuilder::from_varmap(&varmap, DType::F64, dev);
-
                 fn vgg_block(
                     num_convs: usize,
                     out_channels: usize,
@@ -29,9 +30,14 @@ mod test {
                     let mut layers = seq();
                     for _ in 0..(num_convs) {
                         layers = layers
-                            .add(linear(
-                                num_convs, // TODO: Fixme
+                            .add(conv2d(
+                                42, // Fixme
                                 out_channels,
+                                3,
+                                Conv2dConfig {
+                                    padding: 1,
+                                    ..Default::default()
+                                },
                                 vb.pp(num_convs.to_string()),
                             )?)
                             .add(Activation::Relu);
@@ -58,9 +64,12 @@ mod test {
                         .add_fn(|xs| dropout(xs, 0.5))
                         //
                         .add(linear(4096, num_classes, vb.pp("l2"))?),
+                    lr,
                 })
             }
         }
         // TODO training
+        let vgg = VGG::new(&[(1, 1)], 1e-3, 10, vb);
+        Ok(())
     }
 }

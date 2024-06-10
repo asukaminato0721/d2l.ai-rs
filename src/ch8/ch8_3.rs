@@ -7,16 +7,21 @@ mod test {
     };
 
     #[test]
-    fn f() {
+    fn f() -> Result<(), Box<dyn std::error::Error>> {
+        let dev = &Device::cuda_if_available(0)?;
+        let varmap = VarMap::new();
+        let vb = VarBuilder::from_varmap(&varmap, DType::F64, dev);
+
         struct NiN {
             net: Sequential,
+            lr: f32,
         }
         impl NiN {
-            fn new(lr: f32, num_classes: usize) -> Result<Self, Box<dyn std::error::Error>> {
-                let dev = &Device::cuda_if_available(0)?;
-                let varmap = VarMap::new();
-                let vb = VarBuilder::from_varmap(&varmap, DType::F64, dev);
-
+            fn new(
+                lr: f32,
+                num_classes: usize,
+                vb: VarBuilder,
+            ) -> Result<Self, Box<dyn std::error::Error>> {
                 fn nin_block(
                     out_channels: usize,
                     kernel_size: usize,
@@ -58,9 +63,12 @@ mod test {
                         .add(nin_block(num_classes, 3, 1, 1, &vb)?)
                         .add_fn(|x| x.avg_pool2d((1, 1)))
                         .add_fn(|x| x.flatten_all()),
+                    lr,
                 })
             }
         }
+        let nin = NiN::new(1e-3, 10, vb);
         // TODO training
+        Ok(())
     }
 }
