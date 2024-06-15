@@ -28,8 +28,8 @@ mod test {
                     strides: usize,
                     padding: usize,
                     vb: &VarBuilder,
-                ) -> Result<Sequential, Box<dyn std::error::Error>> {
-                    return Ok(seq()
+                ) -> candle_core::Result<Sequential> {
+                    Ok(seq()
                         .add(conv2d(
                             10, // TODO
                             out_channels,
@@ -45,7 +45,7 @@ mod test {
                         .add(conv2d(10, out_channels, 1, Default::default(), vb.pp("1"))?)
                         .add(Activation::Relu)
                         .add(conv2d(10, out_channels, 1, Default::default(), vb.pp("1"))?)
-                        .add(Activation::Relu));
+                        .add(Activation::Relu))
                 }
 
                 Ok(Self {

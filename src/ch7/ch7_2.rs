@@ -27,7 +27,7 @@ mod test {
                         .to_vec0::<f64>()?
                 }
             }
-            Ok(torch::new(Y, device)?)
+            torch::new(Y, device)
         }
         assert_eq!(corr2d(&X, &K)?.to_vec2::<f64>()?, [[19., 25.], [37., 43.]]);
 
@@ -102,7 +102,7 @@ mod test {
 
         // for i in 0..10 {
         //     let Y_hat = conv2d.forward(&X)?;
-        //     let l = Y_hat.broadcast_sub(&Y)?.powf(2.)?;
+        //     let l = Y_hat.broadcast_sub(&Y)?.sqr()?;
         //     // Update the kernel
         //     l.sum_all()?
         //         .backward()?

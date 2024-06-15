@@ -76,7 +76,7 @@ mod test {
                 while X.abs()?.sum_all()?.to_vec0::<f64>()? > 1. {
                     X = (X * 0.5)?;
                 }
-                return X.sum_all();
+                X.sum_all()
             }
         }
         let net = FixedHiddenMLP::new()?;

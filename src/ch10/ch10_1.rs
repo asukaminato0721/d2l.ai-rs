@@ -36,10 +36,9 @@ mod test {
             num_hiddens: usize,
             sigma: f64,
         ) -> Result<Self, candle_core::Error> {
-            let init_weight =
-                |shape: (usize, usize)| -> Result<Tensor, candle_core::Error> {
-                    torch::rand(0., 1., shape, &Device::Cpu)? * sigma
-                };
+            let init_weight = |shape: (usize, usize)| -> Result<Tensor, candle_core::Error> {
+                torch::rand(0., 1., shape, &Device::Cpu)? * sigma
+            };
             let triple = || -> Result<(Tensor, Tensor, Tensor), candle_core::Error> {
                 Ok((
                     init_weight((num_inputs, num_hiddens))?,
@@ -92,7 +91,7 @@ mod test {
                 H_C.unwrap()
             };
             let mut outputs = vec![];
-            for X in inputs {
+            for X in inputs 
                 let I = sigmoid(
                     &X.matmul(&self.W_xi)?
                         .broadcast_add(&H.matmul(&self.W_hi)?)?
@@ -131,10 +130,13 @@ mod test {
         let vb = VarBuilder::from_varmap(&varmap, DType::F64, device);
 
         use crate::utils::TimeMachine;
+        use candle_datasets::nlp::tinystories::Dataset;
+        // let train = Dataset::new("data")?;
+        
         /// data = d2l.TimeMachine(batch_size=1024, num_steps=32)
-        let data = TimeMachine::new(1024, 32, 10000, 5000)?;
-        let lstm = LSTMScratch::new(data.vocab.len(), 32, 0.5)?;
-        // idk wtf it is, but it seems to be worked. :P
+        // let data = TimeMachine::new(1024, 32, 10000, 5000)?;
+        let lstm = LSTMScratch::new(27, 32, 0.5)?;
+        // // idk wtf it is, but it seems to be worked. :P
 
         let mut outputs = vec![];
         let mut H_C = None;

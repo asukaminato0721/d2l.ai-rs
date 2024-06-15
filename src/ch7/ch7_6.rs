@@ -15,7 +15,7 @@ mod test {
             net: Sequential,
         }
         impl LeNet {
-            fn new(num_classes: usize, vb: VarBuilder) -> Result<Self, Box<dyn std::error::Error>> {
+            fn new(num_classes: usize, vb: VarBuilder) -> candle_core::Result<Self> {
                 Ok(Self {
                     net: nn::seq()
                         // d2l said this, but I can't figure out the dims
@@ -42,8 +42,8 @@ mod test {
                         .add(linear(84, num_classes, vb.pp("fc3"))?),
                 })
             }
-            fn forward(&self, X: &Tensor) -> Result<Tensor, Box<dyn std::error::Error>> {
-                Ok(self.net.forward(X)?)
+            fn forward(&self, X: &Tensor) -> candle_core::Result<Tensor> {
+                self.net.forward(X)
             }
         }
 

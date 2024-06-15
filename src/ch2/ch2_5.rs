@@ -8,7 +8,7 @@ mod test {
         let x = Var::new(&[0., 1., 2., 3.], device)?;
         let x = x.as_tensor();
         assert_eq!(x.to_vec1::<f64>()?, [0., 1., 2., 3.]);
-        let y = x.powf(2.)?.sum_all()?.affine(2., 0.)?;
+        let y = x.sqr()?.sum_all()?.affine(2., 0.)?;
         assert_eq!(y.to_vec0::<f64>()?, 28.);
         assert_eq!(
             y.backward()?.get(x).unwrap().to_vec1::<f64>()?,
@@ -29,7 +29,7 @@ mod test {
             [1., 1., 1., 1.]
         );
         /// 2.5.2
-        let y = x.powf(2.)?;
+        let y = x.sqr()?;
         assert_eq!(
             y.backward()?.get(x).unwrap().to_vec1::<f64>()?,
             [0., 2., 4., 6.]
