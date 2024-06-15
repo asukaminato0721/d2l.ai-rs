@@ -123,14 +123,14 @@ mod test {
                     .add(Inception::new(128, (128, 256), (24, 64), 64, vb)?)
                     .add(Inception::new(112, (144, 288), (32, 64), 64, vb)?)
                     .add(Inception::new(256, (160, 320), (32, 128), 128, vb)?)
-                    .add_fn(|x|todo!("nn.MaxPool2d(kernel_size=3, stride=1, padding=1)"))
+                    .add_fn(|x| todo!("nn.MaxPool2d(kernel_size=3, stride=1, padding=1)"))
                     .add_fn(|x| x.max_pool2d_with_stride(3, 2)))
             }
             fn b5(vb: &VarBuilder) -> Result<Sequential> {
                 Ok(seq()
                     .add(Inception::new(256, (160, 320), (32, 128), 128, vb)?)
                     .add(Inception::new(384, (192, 384), (48, 128), 128, vb)?)
-                    .add_fn(|x|todo!("nn.MaxPool2d(kernel_size=3, stride=1, padding=1)"))
+                    .add_fn(|x| todo!("nn.MaxPool2d(kernel_size=3, stride=1, padding=1)"))
                     .add_fn(|x| x.avg_pool2d((1, 1)))
                     .add_fn(|x| x.flatten_all()))
             }

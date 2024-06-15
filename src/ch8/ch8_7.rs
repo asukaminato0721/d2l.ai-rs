@@ -8,10 +8,7 @@ mod test {
 
     #[test]
     fn f() -> Result<(), Box<dyn std::error::Error>> {
-        fn conv_block(
-            num_channels: usize,
-            vb: &VarBuilder,
-        ) -> candle_core::Result<Sequential> {
+        fn conv_block(num_channels: usize, vb: &VarBuilder) -> candle_core::Result<Sequential> {
             Ok(seq()
                 //   .add(batch_norm(42, BatchNormConfig::default(), vb)?)
                 .add(Activation::Relu)

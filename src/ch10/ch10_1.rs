@@ -91,7 +91,7 @@ mod test {
                 H_C.unwrap()
             };
             let mut outputs = vec![];
-            for X in inputs 
+            for X in inputs {
                 let I = sigmoid(
                     &X.matmul(&self.W_xi)?
                         .broadcast_add(&H.matmul(&self.W_hi)?)?
@@ -132,7 +132,7 @@ mod test {
         use crate::utils::TimeMachine;
         use candle_datasets::nlp::tinystories::Dataset;
         // let train = Dataset::new("data")?;
-        
+
         /// data = d2l.TimeMachine(batch_size=1024, num_steps=32)
         // let data = TimeMachine::new(1024, 32, 10000, 5000)?;
         let lstm = LSTMScratch::new(27, 32, 0.5)?;

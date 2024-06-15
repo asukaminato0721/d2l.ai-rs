@@ -29,10 +29,9 @@ mod test {
                 num_hiddens: usize,
                 sigma: f64,
             ) -> Result<Self, candle_core::Error> {
-                let init_weight =
-                    |shape: (usize, usize)| -> Result<Tensor, candle_core::Error> {
-                        torch::rand(0., 1., shape, &Device::Cpu)? * sigma
-                    };
+                let init_weight = |shape: (usize, usize)| -> Result<Tensor, candle_core::Error> {
+                    torch::rand(0., 1., shape, &Device::Cpu)? * sigma
+                };
                 let triple = || -> Result<(
                     Result<Tensor, candle_core::Error>,
                      Result<Tensor, candle_core::Error>,
