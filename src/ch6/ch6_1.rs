@@ -2,7 +2,7 @@
 mod test {
     use candle_core::{DType, Device, IndexOp, Result, Tensor as torch, Tensor, Var};
     use candle_nn::{
-        self as nn, linear, seq, Activation, Linear, Module, Sequential, VarBuilder, VarMap,
+        self as nn, Activation, Linear, Module, Sequential, VarBuilder, VarMap, linear, seq,
     };
     #[test]
     fn get_start() -> Result<()> {

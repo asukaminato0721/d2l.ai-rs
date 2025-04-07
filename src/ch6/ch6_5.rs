@@ -2,7 +2,7 @@
 mod test {
     use candle_core::{DType, Device, IndexOp, Tensor as torch, Tensor, Var};
     use candle_nn::{
-        self as nn, linear, seq, Activation, Linear, Module, Sequential, VarBuilder, VarMap,
+        self as nn, Activation, Linear, Module, Sequential, VarBuilder, VarMap, linear, seq,
     };
     #[test]
     fn ch6_5_1() -> Result<(), Box<dyn std::error::Error>> {

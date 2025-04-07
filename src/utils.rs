@@ -161,11 +161,7 @@ impl TimeMachine {
 
         let X_data = self.X[idx_range.clone()].to_vec();
         let Y_data = self.Y[idx_range].to_vec();
-        if train {
-            (X_data, Y_data)
-        } else {
-            todo!()
-        }
+        if train { (X_data, Y_data) } else { todo!() }
     }
 }
 #[cfg(test)]

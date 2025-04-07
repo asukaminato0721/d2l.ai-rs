@@ -2,8 +2,8 @@
 mod test {
     use candle_core::{DType, Device, IndexOp, Shape, Tensor, Tensor as torch, Var};
     use candle_nn::{
-        self as nn, conv2d, conv2d_no_bias, linear, ops::sigmoid, seq, Activation, Conv2dConfig,
-        Linear, Module, Sequential, VarBuilder, VarMap,
+        self as nn, Activation, Conv2dConfig, Linear, Module, Sequential, VarBuilder, VarMap,
+        conv2d, conv2d_no_bias, linear, ops::sigmoid, seq,
     };
 
     #[test]
