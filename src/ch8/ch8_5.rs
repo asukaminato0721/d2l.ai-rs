@@ -2,7 +2,7 @@
 mod test {
     use candle_core::Result;
     use candle_nn::{
-        batch_norm, conv2d, linear, seq, Activation, BatchNorm, Sequential, VarBuilder,
+        Activation, BatchNorm, Sequential, VarBuilder, batch_norm, conv2d, linear, seq,
     };
 
     #[test]

@@ -1,5 +1,5 @@
+use candle_core::{D, Tensor};
 use candle_core::{DType, Device, IndexOp, Result, Tensor as torch, Var};
-use candle_core::{Tensor, D};
 struct SyntheticRegressionData {
     X: Tensor,
     y: Tensor,

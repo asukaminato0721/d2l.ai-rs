@@ -2,12 +2,12 @@
 mod test {
     use std::collections::HashMap;
 
-    use candle_core::{DType, Device, IndexOp, Shape, Tensor as torch, Tensor, Var, D};
+    use candle_core::{D, DType, Device, IndexOp, Shape, Tensor as torch, Tensor, Var};
     use candle_nn::{
-        self as nn, conv2d, conv2d_no_bias, linear, loss,
+        self as nn, Activation, Conv2dConfig, LSTMConfig, Linear, Module, Optimizer, RNN, SGD,
+        Sequential, VarBuilder, VarMap, conv2d, conv2d_no_bias, linear, loss,
         ops::{self, sigmoid},
-        seq, Activation, Conv2dConfig, LSTMConfig, Linear, Module, Optimizer, Sequential,
-        VarBuilder, VarMap, RNN, SGD,
+        seq,
     };
     use rand::{seq::SliceRandom, thread_rng};
     struct LSTMScratch {

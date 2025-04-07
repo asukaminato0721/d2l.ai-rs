@@ -3,8 +3,8 @@
 mod test {
     use candle_core::{DType, Device, Tensor};
     use candle_nn::{
-        conv2d, linear, linear_no_bias, ops::dropout, seq, Activation, Conv2dConfig, Sequential,
-        VarBuilder, VarMap,
+        Activation, Conv2dConfig, Sequential, VarBuilder, VarMap, conv2d, linear, linear_no_bias,
+        ops::dropout, seq,
     };
 
     #[test]

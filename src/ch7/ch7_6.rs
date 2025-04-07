@@ -2,10 +2,10 @@
 mod test {
     use std::{borrow::BorrowMut, vec};
 
-    use candle_core::{DType, Device, IndexOp, Tensor, Var, D};
+    use candle_core::{D, DType, Device, IndexOp, Tensor, Var};
     use candle_nn::{
-        self as nn, conv, conv2d, conv2d_no_bias, linear, loss, ops, seq, Activation, Conv2dConfig,
-        Linear, Module, Optimizer, Sequential, VarBuilder, VarMap,
+        self as nn, Activation, Conv2dConfig, Linear, Module, Optimizer, Sequential, VarBuilder,
+        VarMap, conv, conv2d, conv2d_no_bias, linear, loss, ops, seq,
     };
     use rand::{prelude::SliceRandom, thread_rng};
 

@@ -2,8 +2,8 @@
 mod test {
     use candle_core::{Device, Tensor, Tensor as torch};
     use candle_nn::{
-        batch_norm, conv2d, BatchNorm, BatchNormConfig, Conv2d, Conv2dConfig, Module, ModuleT,
-        VarBuilder, VarMap,
+        BatchNorm, BatchNormConfig, Conv2d, Conv2dConfig, Module, ModuleT, VarBuilder, VarMap,
+        batch_norm, conv2d,
     };
 
     #[test]

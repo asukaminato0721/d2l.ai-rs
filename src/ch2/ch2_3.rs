@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod test {
-    use candle_core::{scalar::TensorOrScalar, DType, Device, IndexOp, Result, Tensor as torch};
+    use candle_core::{DType, Device, IndexOp, Result, Tensor as torch, scalar::TensorOrScalar};
     #[test]
     fn get_start() -> Result<()> {
         let device = &Device::cuda_if_available(0)?;
