@@ -1,5 +1,4 @@
 // mostly rewrite by chatgpt4o
-use candle_datasets;
 use candle_datasets::nlp::tinystories::Dataset;
 use std::collections::HashMap;
 use std::collections::HashSet;

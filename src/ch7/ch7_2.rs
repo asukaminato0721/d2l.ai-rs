@@ -38,7 +38,7 @@ mod test {
             }
             impl Module for Conv2D {
                 fn forward(&self, xs: &Tensor) -> Result<Tensor> {
-                    Ok(corr2d(xs, &self.weight)?.add(&self.bias)?)
+                    corr2d(xs, &self.weight)?.add(&self.bias)
                 }
             }
 

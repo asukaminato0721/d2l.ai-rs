@@ -45,7 +45,7 @@ mod test {
                 &self,
                 xs: &candle_core::Tensor,
             ) -> candle_core::Result<candle_core::Tensor> {
-                Ok(torch::cat(&self.net.forward_all(xs)?, 1)?)
+                torch::cat(&self.net.forward_all(xs)?, 1)
             }
         }
         let dev = &Device::cuda_if_available(0)?;

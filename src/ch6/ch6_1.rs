@@ -40,7 +40,7 @@ mod test {
                 })
             }
             fn forward(self, X: &Tensor) -> Result<Tensor> {
-                Ok(self.out.forward(&self.hidden.forward(X)?.relu()?)?)
+                self.out.forward(&self.hidden.forward(X)?.relu()?)
             }
         }
         let X = torch::rand(0., 1., (2, 20), device)?;
@@ -104,7 +104,7 @@ mod test {
         }
         impl Module for NestMLP {
             fn forward(&self, X: &Tensor) -> Result<Tensor> {
-                Ok(self.linear.forward(&self.net.forward(X)?)?)
+                self.linear.forward(&self.net.forward(X)?)
             }
         }
         let chimera = seq()

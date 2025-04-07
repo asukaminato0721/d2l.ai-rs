@@ -95,7 +95,7 @@ mod test {
                     let H = Z.mul(&H)?.add(&Z.affine(-1., 1.)?.mul(&H_tilde)?)?;
                     outputs.push(H);
                 }
-                return Ok((outputs, H));
+                Ok((outputs, H))
             }
         }
     }

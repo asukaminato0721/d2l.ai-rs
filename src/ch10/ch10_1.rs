@@ -116,7 +116,7 @@ mod test {
                 let H = O.mul(&C.tanh()?)?;
                 outputs.push(H);
             }
-            return Ok((outputs, Some((H, C))));
+            Ok((outputs, Some((H, C))))
         }
     }
     #[test]
