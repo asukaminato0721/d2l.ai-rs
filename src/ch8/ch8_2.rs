@@ -44,7 +44,7 @@ mod test {
                             .add(Activation::Relu);
                     }
                     layers = layers.add_fn(|x| x.max_pool2d_with_stride(2, 2));
-                    return Ok(layers);
+                    Ok(layers)
                 }
 
                 let mut layer = seq();

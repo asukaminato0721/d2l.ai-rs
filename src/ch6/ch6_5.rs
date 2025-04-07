@@ -16,7 +16,7 @@ mod test {
 
         impl Module for CenteredLayer {
             fn forward(&self, X: &Tensor) -> Result<Tensor, candle_core::Error> {
-                Ok(X.broadcast_sub(&X.mean_all()?)?)
+                X.broadcast_sub(&X.mean_all()?)
             }
         }
         let net = CenteredLayer {};
@@ -46,7 +46,7 @@ mod test {
         }
         impl Module for MyLinear {
             fn forward(&self, X: &Tensor) -> Result<Tensor, candle_core::Error> {
-                Ok(X.matmul(&self.weight)?.broadcast_add(&self.bias)?)
+                X.matmul(&self.weight)?.broadcast_add(&self.bias)
             }
         }
         let linear = MyLinear::new(5, 3)?;

@@ -35,9 +35,9 @@ mod test {
             [0., 2., 4., 6.]
         );
         /// 2.5.3
-        let y = x.mul(&x)?;
+        let y = x.mul(x)?;
         let u = y.detach();
-        let z = u.mul(&x)?;
+        let z = u.mul(x)?;
         assert_eq!(
             z.sum_all()?
                 .backward()?
@@ -62,11 +62,11 @@ mod test {
             while b.sqr()?.sum_all()?.sqrt()?.to_vec0::<f64>()? < 1000. {
                 b = (b * 2.)?;
             }
-            return if b.sum_all()?.to_vec0::<f64>()? > 0. {
+            if b.sum_all()?.to_vec0::<f64>()? > 0. {
                 Ok(b)
             } else {
                 b * 100.
-            };
+            }
         }
         let a = Var::new(&[1f64], device)?;
         let a = a.as_tensor();
@@ -76,7 +76,7 @@ mod test {
                 .backward()?
                 .get(a)
                 .unwrap()
-                .eq(&f(a)?.div(&a)?)?
+                .eq(&f(a)?.div(a)?)?
                 .to_vec1::<u8>()?,
             [1]
         );

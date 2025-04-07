@@ -51,7 +51,7 @@ mod test {
         let BSIZE = 64;
         let dev = &Device::cuda_if_available(0)?;
         let varmap = VarMap::new();
-        let vb = VarBuilder::from_varmap(&varmap, DType::F32, &dev);
+        let vb = VarBuilder::from_varmap(&varmap, DType::F32, dev);
         let model = LeNet::new(11, vb)?;
         let m = candle_datasets::vision::mnist::load_dir("data")?;
         let train_labels = m.train_labels;
@@ -59,8 +59,8 @@ mod test {
         let train_labels = train_labels.to_dtype(DType::U32)?.to_device(dev)?;
         // http://d2l.ai/_modules/d2l/torch.html#Trainer use SGD so I also use it.
         let mut opt = candle_nn::SGD::new(varmap.all_vars(), 0.1)?;
-        let test_images = m.test_images.to_device(&dev)?;
-        let test_labels = m.test_labels.to_dtype(DType::U32)?.to_device(&dev)?;
+        let test_images = m.test_images.to_device(dev)?;
+        let test_labels = m.test_labels.to_dtype(DType::U32)?.to_device(dev)?;
 
         let n_batches = train_images.dim(0)? / BSIZE;
         let mut batch_idxs = (0..n_batches).collect::<Vec<usize>>();
