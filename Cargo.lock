@@ -263,9 +263,9 @@ checksum = "514de17de45fdb8dc022b1a7975556c53c86f9f0aa5f534b98977b171857c2c9"
 
 [[package]]
 name = "candle-core"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "311d8dbe293aa3b5c34f6a57727fafd67d17a74fa8b65276501237c233b34ffd"
+checksum = "d5b18de020c2729dbf7ac390325312644808b6ba9b7962f1f724e9185b1d53c7"
 dependencies = [
  "byteorder",
  "gemm",
@@ -284,9 +284,9 @@ dependencies = [
 
 [[package]]
 name = "candle-datasets"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f75237206d74b58f78b728ef1ad6662d12f727aa4dbc5e55d71579f21417d920"
+checksum = "c4f47f338911e06ac313800ecfd76fa13aad71a55c7e44a4fd46cef7cc48f84b"
 dependencies = [
  "byteorder",
  "candle-core",
@@ -302,9 +302,9 @@ dependencies = [
 
 [[package]]
 name = "candle-nn"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1efb293365959fc5feacbd93fa918980df2d9f2fb89853af02e33a830c10b49b"
+checksum = "b006b30f66a0d94fc9cef0ac4de6ce510565f35ae2c6c35ce5d4aacfb0fc8eeb"
 dependencies = [
  "candle-core",
  "half",
